@@ -172,7 +172,18 @@ class _ProductHomeView extends State<ProductHomeView> {
                             ),
                             child: IconButton(
                               // padding: const EdgeInsets.all(-1),
-                              onPressed: () {},
+                              onPressed: () {
+                                // add to cart
+                                products.add(
+                                  Product(
+                                    id: e.id,
+                                    title: e.title,
+                                    price: e.price,
+                                    description: e.description,
+                                    category: e.category,
+                                  ),
+                                );
+                              },
                               icon: const Icon(
                                 // Icons.favorite_border,
                                 Icons.add,
@@ -216,6 +227,7 @@ class _ProductHomeView extends State<ProductHomeView> {
       actions: [
         IconButton(
           onPressed: () {
+            print(products.length);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => CartScreen(products)),

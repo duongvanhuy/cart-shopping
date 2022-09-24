@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hine_shopping/models/product.dart';
 
 class CartScreen extends StatefulWidget {
-  List<Product>? listCart;
-  CartScreen(this.listCart);
+  List<Product>? _listCart;
+  CartScreen(listCart) {
+    _listCart = listCart;
+  }
 
   @override
-  State<CartScreen> createState() => _CartScreenState(listCart);
+  State<CartScreen> createState() => _CartScreenState(_listCart);
 }
 
 class _CartScreenState extends State<CartScreen> {
@@ -45,7 +47,7 @@ class _CartScreenState extends State<CartScreen> {
                           width: 60,
                           child: Image(
                             image: NetworkImage(
-                              item.images![0],
+                              item.category!.image!,
                               // set style image
                               scale: 1,
                             ),
