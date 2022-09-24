@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hine_shopping/models/product.dart';
+import 'package:hine_shopping/utils/product_helper.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
   List<Product>? _listCart;
@@ -26,11 +28,12 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   Widget buildBody() {
-    return Container(
-      child: ListView(
-          padding: const EdgeInsets.all(10),
-          scrollDirection: Axis.vertical,
-          children: [
+    return Consumer<ProductHelper>(builder: (context, value, child) {
+      return Container(
+          child: ListView(
+              padding: const EdgeInsets.all(10),
+              scrollDirection: Axis.vertical,
+              children: [
             for (var item in _listCart!)
               Container(
                 child: ListTile(
@@ -78,14 +81,18 @@ class _CartScreenState extends State<CartScreen> {
                             children: [
                               Container(
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    value.changeCounter(0);
+                                  },
                                   icon: Icon(Icons.remove),
                                 ),
                               ),
-                              Text("1"),
+                              Text("${value.counter}"),
                               Container(
                                 child: IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    value.changeCounter(1);
+                                  },
                                   icon: Icon(Icons.add),
                                 ),
                               ),
@@ -96,7 +103,7 @@ class _CartScreenState extends State<CartScreen> {
                     //   trailing: Text("Số lượng"),
                     ),
               )
-          ]),
-    );
+          ]));
+    });
   }
 }

@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => ClotherHelper()),
+        ChangeNotifierProvider(create: (context) => ProductHelper()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false, // remove banner debug

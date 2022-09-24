@@ -3,8 +3,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class ClotherHelper extends ChangeNotifier {
+class ProductHelper extends ChangeNotifier {
+  int counter = 1;
   List<Product> list = [];
+
+  changeCounter(int value) {
+    if (value > 0) {
+      counter = counter + 1;
+    } else if (counter > 1) {
+      counter = counter - 1;
+    }
+    notifyListeners();
+  }
+
   void getClothers() async {
     var response = await http
         .get(Uri.parse('https://api.escuelajs.co/api/v1/products'), headers: {

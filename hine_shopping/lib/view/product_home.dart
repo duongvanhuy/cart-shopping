@@ -18,7 +18,7 @@ class _ProductHomeView extends State<ProductHomeView> {
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<ClotherHelper>(context);
+    var provider = Provider.of<ProductHelper>(context);
     provider.getClothers();
     // controller search
     final TextEditingController _controllerSearch = TextEditingController();
