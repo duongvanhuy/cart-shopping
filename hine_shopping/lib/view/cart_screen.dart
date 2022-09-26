@@ -38,6 +38,8 @@ class _CartScreenState extends State<CartScreen> {
           address(),
           checkAllProduct(value),
           SizedBox(height: 7),
+          //  value.actionBuyProduct(),
+          if (value.carts!.length == 0) actionBuyProduct(),
           for (var i = 0; i < value.carts!.length; i++)
             Container(
               padding: const EdgeInsets.all(10),
@@ -121,7 +123,9 @@ class _CartScreenState extends State<CartScreen> {
                             Container(
                               alignment: Alignment.centerRight,
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  value.detleteDataToCart(value.carts![i].id!);
+                                },
                                 child: Text(
                                   "Xóa",
                                   style: TextStyle(
@@ -287,7 +291,45 @@ class _CartScreenState extends State<CartScreen> {
             child: Container(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.only(left: 10),
-              child: Icon(Icons.delete_outline),
+              child: IconButton(
+                onPressed: () {
+                  props.deteleAllDataToCart();
+                },
+                icon: Icon(Icons.delete_outline),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget actionBuyProduct() {
+    return Container(
+      child: Column(
+        children: [
+          // image asset
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Image.asset(
+              "images/muaHang.png",
+              width: 200,
+              height: 200,
+            ),
+          ),
+          Text("Bạn chưa có sản phẩm nào trong giỏ hàng"),
+          // text button "Tiếp tục mua sắm"
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: TextButton(
+              onPressed: () {},
+              child: Text(
+                "Tiếp tục mua sắm",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 20,
+                ),
+              ),
             ),
           ),
         ],

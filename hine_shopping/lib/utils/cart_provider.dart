@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hine_shopping/database/db_helper.dart';
 import 'package:hine_shopping/models/cart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 
 class CartProvider with ChangeNotifier {
   DBHelper dbHelper = DBHelper();
@@ -43,7 +44,7 @@ class CartProvider with ChangeNotifier {
   }
 
   void checkCart(int id) {
-    int check = carts.indexWhere((e) => e.id == id);
+    int check = carts.indexOf(carts.firstWhere((e) => e.id == id));
     if (check >= 0) {
       checkList[check] = checkList[check] ? false : true;
       bool countCheck =
@@ -60,12 +61,11 @@ class CartProvider with ChangeNotifier {
 
   void setPriceInCart() {
     totalPrice = 0.0;
-    checkList.forEach((e) {
-      if (e) {
-        totalPrice += carts[checkList.indexOf(e)].productPrice! *
-            carts[checkList.indexOf(e)].quantity!.value;
+    for (int i = 0; i < checkList.length; i++) {
+      if (checkList[i]) {
+        totalPrice += carts[i].productPrice! * carts[i].quantity!.value;
       }
-    });
+    }
     notifyListeners();
   }
 
@@ -86,7 +86,28 @@ class CartProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void detleteDataToCart(int id) {
+    int check = carts.indexWhere((e) => e.id == id);
+    print("check ${check}");
+    if (check >= 0) {
+      carts.removeAt(check);
+      checkList.removeAt(check);
+      setPriceInCart();
+    }
+    notifyListeners();
+  }
+
+  void deteleAllDataToCart() {
+    if (checkAll) {
+      carts.clear();
+      checkList.clear();
+      totalPrice = 0.0;
+      notifyListeners();
+    }
+  }
+
   void getTotalPrice() {
+    totalPrice = 0.0;
     for (var i = 0; i < carts.length; i++) {
       totalPrice += carts[i].productPrice! * carts[i].quantity!.value;
     }
