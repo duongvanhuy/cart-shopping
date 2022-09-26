@@ -4,6 +4,7 @@ import 'package:hine_shopping/models/product.dart';
 import 'package:hine_shopping/utils/cart_provider.dart';
 import 'package:hine_shopping/utils/product_helper.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class CartScreen extends StatefulWidget {
   @override
@@ -13,6 +14,8 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   bool _isChecked = false;
   CartProvider? props;
+
+  final currencyFormatter = NumberFormat('#,##0.000', 'ID');
   @override
   Widget build(BuildContext context) {
     return Consumer<CartProvider>(builder: (context, value, child) {
@@ -88,7 +91,7 @@ class _CartScreenState extends State<CartScreen> {
                           height: 8,
                         ),
                         Text(
-                          value.carts![i].initialPrice.toString() + "\.000 đ",
+                          "${currencyFormatter.format(value.carts![i].initialPrice)} đ",
                           style: TextStyle(
                             color: Colors.red,
                             fontWeight: FontWeight.bold,
@@ -236,7 +239,7 @@ class _CartScreenState extends State<CartScreen> {
                 Container(
                   padding: const EdgeInsets.only(left: 8),
                   child: Text(
-                    "Tổng tiền: ${value.totalPrice} đ",
+                    "Tổng tiền: ${currencyFormatter.format(value.totalPrice)} đ",
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
@@ -322,7 +325,9 @@ class _CartScreenState extends State<CartScreen> {
           Container(
             margin: EdgeInsets.only(top: 20),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
               child: Text(
                 "Tiếp tục mua sắm",
                 style: TextStyle(
