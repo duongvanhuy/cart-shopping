@@ -1,8 +1,11 @@
-import 'package:hine_shopping/models/cart.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart';
 import 'dart:io' as io;
+import 'dart:async';
+
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
+
+import 'package:hine_shopping/models/cart.dart';
 
 class DBHelper {
   static Database? _database;
@@ -11,8 +14,9 @@ class DBHelper {
     if (_database != null) {
       return _database!;
     }
+
     _database = await initDatabase();
-    return null;
+    return _database;
   }
 
   initDatabase() async {
@@ -31,7 +35,10 @@ class DBHelper {
 // inserting data into the table
   Future<Cart> insert(Cart cart) async {
     var dbClient = await database;
-    await dbClient!.insert('cart', cart.toMap());
+    var data = cart.toMap();
+    print("cart tomap:  ${data}");
+    var res = await dbClient!.insert('cart', cart.toMap());
+
     return cart;
   }
 

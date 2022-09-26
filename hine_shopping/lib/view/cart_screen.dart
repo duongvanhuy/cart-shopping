@@ -1,159 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:hine_shopping/models/cart.dart';
 import 'package:hine_shopping/models/product.dart';
+import 'package:hine_shopping/utils/cart_provider.dart';
 import 'package:hine_shopping/utils/product_helper.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
-  List<Product>? _listCart;
-  CartScreen(listCart) {
-    _listCart = listCart;
-  }
-
   @override
-  State<CartScreen> createState() => _CartScreenState(_listCart);
+  State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
-  List<Product>? _listCart;
-  _CartScreenState(listCart) {
-    _listCart = listCart;
-  }
-  // check  "_isChecked"
   bool _isChecked = false;
-
+  CartProvider? props;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Giỏ hàng"),
-      ),
-      body: buildBody(),
-      bottomNavigationBar: buildBottom(),
-    );
+    return Consumer<CartProvider>(builder: (context, value, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Giỏ hàng"),
+        ),
+        body: buildBody(value),
+        bottomNavigationBar: buildBottom(value),
+      );
+    });
   }
 
-  Widget buildBody() {
-    return Consumer<ProductHelper>(builder: (context, value, child) {
-      return Container(
-          child: ListView(
-              // padding: const EdgeInsets.all(10),
-              scrollDirection: Axis.vertical,
-              children: [
-            address(),
-            checkAllProduct(),
-            SizedBox(height: 7),
-            for (var item in _listCart!)
-              Container(
-                padding: const EdgeInsets.all(10),
-                // border bottom
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Colors.grey.shade200,
-                      width: 1,
-                    ),
+  Widget buildBody(value) {
+    // return Consumer<CartProvider>(builder: (context, value, child) {
+    // props = value;
+    print("value.carts: ${value.carts}");
+    return Container(
+        child: ListView(
+            // padding: const EdgeInsets.all(10),
+            scrollDirection: Axis.vertical,
+            children: [
+          address(),
+          checkAllProduct(value),
+          SizedBox(height: 7),
+          for (var i = 0; i < value.carts!.length; i++)
+            Container(
+              padding: const EdgeInsets.all(10),
+              // border bottom
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey.shade200,
+                    width: 1,
                   ),
                 ),
-                child: Row(children: [
-                  Container(
-                    child: Checkbox(
-                      value: true,
-                      onChanged: (value) {},
+              ),
+              child: Row(children: [
+                Container(
+                  child: Checkbox(
+                    value: value.checkList[i],
+                    onChanged: (e) {
+                      value.checkCart(value.carts![i].id!);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Row(
+                  children: [
+                    Container(
+                      child: Image.network(value.carts![i].image!,
+                          height: 100, width: 80, fit: BoxFit.cover),
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Row(
-                    children: [
-                      Container(
-                        child: Image.network(item.category!.image!,
-                            height: 100, width: 80, fit: BoxFit.cover),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.title!,
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          value.carts![i].productName!,
+                          maxLines: 2,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
                           ),
-                          SizedBox(
-                            height: 8,
+                        ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Text(
+                          value.carts![i].initialPrice.toString() + "\.000 đ",
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Text(
-                            item.price.toString() + "\.000 đ",
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          // thêm - xóa số lượng sản phẩm "-; +" trong giỏ hàng
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                // padding left :0
-                                // padding: EdgeInsets.only(left: 0),
+                        ),
+                        // thêm - xóa số lượng sản phẩm "-; +" trong giỏ hàng
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              // padding left :0
+                              // padding: EdgeInsets.only(left: 0),
 
-                                child: IconButton(
-                                  onPressed: () {
-                                    value.changeCounter(0);
-                                  },
-                                  icon: Icon(Icons.remove),
-                                ),
+                              child: IconButton(
+                                onPressed: () {
+                                  value.changeCounter(0, value.carts![i].id!);
+                                },
+                                icon: Icon(Icons.remove),
                               ),
-                              Container(
-                                  // decoration: BoxDecoration(
-                                  //     border: Border.all(
-                                  //   color: Colors.grey.shade400,
-                                  //   width: 1,
-                                  // )),
-                                  child: Text("${value.counter}")),
-                              Container(
-                                // decoration: BoxDecoration(
-                                //     border: Border.all(
-                                //   color: Colors.grey.shade400,
-                                //   width: 1,
-                                // )),
-                                child: IconButton(
-                                  onPressed: () {
-                                    value.changeCounter(1);
-                                  },
-                                  icon: Icon(Icons.add),
-                                ),
+                            ),
+                            Container(
+                                child:
+                                    Text("${value.carts[i].quantity!.value}")),
+                            Container(
+                              child: IconButton(
+                                onPressed: () {
+                                  value.changeCounter(1, value.carts![i].id!);
+                                },
+                                icon: Icon(Icons.add),
                               ),
-                              Container(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () {},
-                                  child: Text(
-                                    "Xóa",
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerRight,
+                              child: TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  "Xóa",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
 
-                  //   trailing: Text("Số lượng"),
-                ]),
-              )
-          ]));
-    });
+                //   trailing: Text("Số lượng"),
+              ]),
+            )
+        ]));
   }
 
   Widget address() {
@@ -189,7 +177,7 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 
-  Widget buildBottom() {
+  Widget buildBottom(value) {
     return Container(
       // border top
       decoration: BoxDecoration(
@@ -244,7 +232,7 @@ class _CartScreenState extends State<CartScreen> {
                 Container(
                   padding: const EdgeInsets.only(left: 8),
                   child: Text(
-                    "Tổng tiền: 0 \$",
+                    "Tổng tiền: ${value.totalPrice} đ",
                     style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.bold,
@@ -274,7 +262,7 @@ class _CartScreenState extends State<CartScreen> {
   }
   // tất cả sanr phẩm
 
-  Widget checkAllProduct() {
+  Widget checkAllProduct(CartProvider props) {
     return Container(
       padding: const EdgeInsets.all(10),
       // border bottom
@@ -288,11 +276,9 @@ class _CartScreenState extends State<CartScreen> {
         // mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Checkbox(
-            value: _isChecked,
+            value: props.checkAll,
             onChanged: (value) {
-              setState(() {
-                _isChecked = value!;
-              });
+              props.checkAllCart(props.checkAll);
             },
           ),
           Text("Tất cả sản phẩm"),

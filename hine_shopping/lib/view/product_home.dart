@@ -1,4 +1,7 @@
+import 'package:hine_shopping/database/db_helper.dart';
+import 'package:hine_shopping/models/cart.dart';
 import 'package:hine_shopping/models/product.dart';
+import 'package:hine_shopping/utils/cart_provider.dart';
 import 'package:hine_shopping/utils/product_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:hine_shopping/view/cart_screen.dart';
@@ -15,10 +18,15 @@ class _ProductHomeView extends State<ProductHomeView> {
   // _controllerSearch
   final TextEditingController _controllerSearch = TextEditingController();
   List<Product> products = [];
+  List<Cart> carts = [];
+  DBHelper dbHelper = DBHelper();
+  var cart;
+  var provider;
 
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<ProductHelper>(context);
+    cart = Provider.of<CartProvider>(context);
+    provider = Provider.of<ProductHelper>(context);
     provider.getClothers();
     // controller search
     final TextEditingController _controllerSearch = TextEditingController();
@@ -26,6 +34,45 @@ class _ProductHomeView extends State<ProductHomeView> {
     return Scaffold(
       appBar: appBar(),
       body: buildBody(provider),
+    );
+  }
+
+  // void insertToCart(int index) {
+  //   print("index:  ${index}");
+  //   print("provider:  ${provider.list[index].price} ${ValueNotifier(1)}");
+  //   dbHelper
+  //       .insert(
+  //     Cart(
+  //       id: index,
+  //       productId: index.toString(),
+  //       productName: provider.list[index].title,
+  //       initialPrice: provider.list[index].price,
+  //       productPrice: provider.list[index].price,
+  //       quantity: ValueNotifier(1),
+  //       image: provider.list[index].images![0],
+  //     ),
+  //   )
+  //       .then((value) {
+  //     cart.addTotalPrice(products[index].price!.toDouble());
+  //     cart.addCounter();
+  //     print('Product Added to cart');
+  //   }).onError((error, stackTrace) {
+  //     print(error.toString());
+  //   });
+  // }
+  void insertToCart(int index) {
+    print("index:  ${index}");
+    print("provider:  ${provider.list[index].price} ${ValueNotifier(1)}");
+    cart.insertDataToCart(
+      Cart(
+        id: index,
+        productId: index.toString(),
+        productName: provider.list[index].title,
+        initialPrice: provider.list[index].price,
+        productPrice: provider.list[index].price,
+        quantity: ValueNotifier(1),
+        image: provider.list[index].images![0],
+      ),
     );
   }
 
@@ -174,15 +221,25 @@ class _ProductHomeView extends State<ProductHomeView> {
                               // padding: const EdgeInsets.all(-1),
                               onPressed: () {
                                 // add to cart
-                                products.add(
-                                  Product(
-                                    id: e.id,
-                                    title: e.title,
-                                    price: e.price,
-                                    description: e.description,
-                                    category: e.category,
-                                  ),
-                                );
+                                // insertToCart(
+                                //   Product(
+                                //     id: e.id,
+                                //     title: e.title,
+                                //     price: e.price,
+                                //     description: e.description,
+                                //     category: e.category,
+                                //   ),
+                                // );
+                                // products.add(
+                                //   Product(
+                                //     id: e.id,
+                                //     title: e.title,
+                                //     price: e.price,
+                                //     description: e.description,
+                                //     category: e.category,
+                                //   ),
+                                // );
+                                insertToCart(e.id);
                               },
                               icon: const Icon(
                                 // Icons.favorite_border,
@@ -227,10 +284,10 @@ class _ProductHomeView extends State<ProductHomeView> {
       actions: [
         IconButton(
           onPressed: () {
-            print(products.length);
+            print(cart.carts.length);
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => CartScreen(products)),
+              MaterialPageRoute(builder: (context) => CartScreen()),
             );
           },
           icon: const Icon(Icons.shopify_sharp),

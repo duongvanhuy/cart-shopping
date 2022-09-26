@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hine_shopping/utils/cart_provider.dart';
 import 'package:hine_shopping/utils/product_helper.dart';
 import 'package:hine_shopping/view/product_home.dart';
 //import 'package:hine_shopping/view/clothers_home_view.dart';
@@ -14,6 +15,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ProductHelper()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false, // remove banner debug

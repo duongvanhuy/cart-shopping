@@ -5,6 +5,7 @@ import 'dart:convert';
 
 class ProductHelper extends ChangeNotifier {
   int counter = 1;
+  int totalProductInCart = 0;
   List<Product> list = [];
 
   changeCounter(int value) {
@@ -15,6 +16,8 @@ class ProductHelper extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  changeTotalProductInCart() {}
 
   void getClothers() async {
     var response = await http
