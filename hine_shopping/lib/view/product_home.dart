@@ -37,32 +37,7 @@ class _ProductHomeView extends State<ProductHomeView> {
     );
   }
 
-  // void insertToCart(int index) {
-  //   print("index:  ${index}");
-  //   print("provider:  ${provider.list[index].price} ${ValueNotifier(1)}");
-  //   dbHelper
-  //       .insert(
-  //     Cart(
-  //       id: index,
-  //       productId: index.toString(),
-  //       productName: provider.list[index].title,
-  //       initialPrice: provider.list[index].price,
-  //       productPrice: provider.list[index].price,
-  //       quantity: ValueNotifier(1),
-  //       image: provider.list[index].images![0],
-  //     ),
-  //   )
-  //       .then((value) {
-  //     cart.addTotalPrice(products[index].price!.toDouble());
-  //     cart.addCounter();
-  //     print('Product Added to cart');
-  //   }).onError((error, stackTrace) {
-  //     print(error.toString());
-  //   });
-  // }
   void insertToCart(int index) {
-    print("index:  ${index}");
-    print("provider:  ${provider.list[index].price} ${ValueNotifier(1)}");
     cart.insertDataToCart(
       Cart(
         id: index,
@@ -71,7 +46,7 @@ class _ProductHomeView extends State<ProductHomeView> {
         initialPrice: provider.list[index].price,
         productPrice: provider.list[index].price,
         quantity: ValueNotifier(1),
-        image: provider.list[index].images![0],
+        image: provider.list[index].category.image,
       ),
     );
   }
@@ -145,7 +120,7 @@ class _ProductHomeView extends State<ProductHomeView> {
           crossAxisCount: 2,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
-          childAspectRatio: 0.6, // set height
+          childAspectRatio: 0.65, // set height
         ),
         // primary: false,
         padding: const EdgeInsets.all(20),
@@ -199,9 +174,6 @@ class _ProductHomeView extends State<ProductHomeView> {
                     ),
                     Container(
                       child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        //   mainAxisSize: MainAxisSize.max,
                         children: [
                           Expanded(
                             child: Text(
@@ -220,25 +192,6 @@ class _ProductHomeView extends State<ProductHomeView> {
                             child: IconButton(
                               // padding: const EdgeInsets.all(-1),
                               onPressed: () {
-                                // add to cart
-                                // insertToCart(
-                                //   Product(
-                                //     id: e.id,
-                                //     title: e.title,
-                                //     price: e.price,
-                                //     description: e.description,
-                                //     category: e.category,
-                                //   ),
-                                // );
-                                // products.add(
-                                //   Product(
-                                //     id: e.id,
-                                //     title: e.title,
-                                //     price: e.price,
-                                //     description: e.description,
-                                //     category: e.category,
-                                //   ),
-                                // );
                                 insertToCart(e.id);
                               },
                               icon: const Icon(
@@ -264,19 +217,28 @@ class _ProductHomeView extends State<ProductHomeView> {
   //1
   appBar() {
     return AppBar(
-      // back and card
+      // "title" alignment left
+
+      automaticallyImplyLeading: false, // delete button back
       title: Container(
-        width: 100,
+        //   width: 100,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              child: TextButton(
-                onPressed: () {},
-                child: Row(children: [
-                  const Icon(Icons.arrow_back),
-                  Text("Quay lại".padLeft(10))
-                ]),
+              child: IconButton(
+                alignment: Alignment.centerLeft,
+                onPressed: () {
+                  // Navigator.pop(context);
+                },
+                icon: const Icon(Icons.list, color: Colors.blue),
               ),
+            ),
+            Expanded(
+              child: Container(
+                  alignment: Alignment.centerLeft,
+                  child:
+                      TextButton(onPressed: () {}, child: Text("Trang chủ"))),
             ),
           ],
         ),
@@ -284,7 +246,6 @@ class _ProductHomeView extends State<ProductHomeView> {
       actions: [
         IconButton(
           onPressed: () {
-            print(cart.carts.length);
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => CartScreen()),

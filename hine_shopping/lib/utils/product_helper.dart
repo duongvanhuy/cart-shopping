@@ -7,6 +7,8 @@ class ProductHelper extends ChangeNotifier {
   int counter = 1;
   int totalProductInCart = 0;
   List<Product> list = [];
+  String token = '';
+  bool isLogin = false;
 
   changeCounter(int value) {
     if (value > 0) {
@@ -32,6 +34,32 @@ class ProductHelper extends ChangeNotifier {
       // alway reload when changed data
       notifyListeners();
     } else {
+      throw Exception('Failed to load products');
+    }
+  }
+
+  Future<bool> auth(String email, String password) async {
+    var response =
+        await http.post(Uri.parse('https://api.escuelajs.co/api/v1/auth/login'),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(<String, String>{
+              'email': email,
+              'password': password,
+            }));
+
+    print("data input" + email + password + response.statusCode.toString());
+    if (response.statusCode == 201) {
+      final data = jsonDecode(response.body);
+      token = data['access_token'];
+      isLogin = true;
+      print("data output" + isLogin.toString());
+      notifyListeners();
+      return true;
+    } else {
+      isLogin = false;
+      notifyListeners();
       throw Exception('Failed to load products');
     }
   }

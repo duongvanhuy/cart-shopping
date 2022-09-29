@@ -3,7 +3,7 @@ import 'package:hine_shopping/models/category.dart';
 class Product {
   int? id;
   String? title;
-  int? price;
+  num? price;
   String? description;
   Category? category;
   List<String>? images;

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hine_shopping/utils/cart_provider.dart';
 import 'package:hine_shopping/utils/product_helper.dart';
+import 'package:hine_shopping/view/account/loginView.dart';
 import 'package:hine_shopping/view/product_home.dart';
 //import 'package:hine_shopping/view/clothers_home_view.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         ),
         home: Scaffold(
           // body: Text("aaaaaaaauuu"),
-          body: ProductHomeView(),
+          body: LoginView(),
         ),
       ),
     );
